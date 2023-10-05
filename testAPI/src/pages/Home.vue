@@ -1,29 +1,33 @@
-<script setup>
-import Card from "../components/Card.vue";
-
-const URL_API = "https://bti.id/services/btiportalcorems/api/pt-job-posts/no-auth";
-let cardData = [];
-
-// Mengambil data dari API
-async function fetchData() {
-  try {
-    const response = await fetch(URL_API);
-    const data = await response.json();
-    cardData = data; // Menyimpan data ke variabel cardData
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-}
-
-fetchData(); 
-</script>
-
+<!-- home.vue -->
 <template>
-  <main class="mx-10">
-    <h1>Home</h1>
-    <div>
-      <!-- Mengulang data dari API untuk membuat Card -->
-      <Card v-for="(item, index) in cardData" :key="index" :title="item.title" />
-    </div>
+  <main class="m-10 min-h-screen">
+    <h1 class="text-green-600 font-bold text-center text-4xl mb-10">
+      We’re Hiring
+    </h1>
+    <section>
+      <router-link
+        v-for="(item, index) in cardData"
+        :key="index"
+        :to="`/form/${item.id}`"
+      >
+        <Card :title="item.title" :description="item.description.txt" />
+      </router-link>
+    </section>
   </main>
 </template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import Card from "../components/Card.vue";
+import Data from "../data.json";
+
+const cardData = ref([]);
+
+function fetchData() {
+  cardData.value = Data;
+}
+
+onMounted(() => {
+  fetchData();
+});
+</script>
